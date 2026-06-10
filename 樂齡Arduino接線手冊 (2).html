@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>樂齡 Arduino 自己動手做｜接線手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EAF0F6; --grid:#dbe5f0; --ink:#1d2b38; --ink-soft:#5a6b7b;
+  --card:#ffffff; --line:#d6e0ea; --blue:#2D6CDF;
+  --w-red:#E5484D; --w-black:#2b2b2b; --w-yellow:#EFA50A; --w-green:#2FA84F; --w-blue:#2D6CDF;
+  --g1:#EE6C4D; --g2:#179E8F; --g3:#7C5CD6; --g4:#3DA35D; --g5:#2D6CDF;
+  --shadow:0 10px 30px rgba(29,43,56,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);
+  font-family:"Noto Sans TC","Baloo 2",system-ui,"PingFang TC","Microsoft JhengHei",sans-serif;
+  background:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;line-height:1.75;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px 80px}
+h1,h2,h3{font-family:"Baloo 2","Noto Sans TC",sans-serif;line-height:1.25;margin:0}
+
+.hero{margin:26px 0 18px;padding:34px 30px;border-radius:26px;
+  background:linear-gradient(135deg,#2D6CDF,#5B8DEF 55%,#7C5CD6);color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%);}
+.hero .eyebrow{font-weight:700;letter-spacing:3px;font-size:13px;opacity:.9}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;margin:6px 0 10px}
+.hero p{margin:0;max-width:660px;font-size:16px;opacity:.96}
+.hero .chips{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.hero .chips span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:5px 12px;border-radius:999px;font-size:13px;font-weight:500}
+
+.nav{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;gap:8px;padding:10px 0;margin-bottom:8px;background:rgba(234,240,246,.92);backdrop-filter:blur(6px)}
+.nav a{text-decoration:none;font-weight:700;font-size:14px;color:#fff;padding:8px 14px;border-radius:999px;box-shadow:var(--shadow)}
+.nav a.n0{background:#37475a}
+.nav a.n1{background:var(--g1)} .nav a.n2{background:var(--g2)} .nav a.n3{background:var(--g3)} .nav a.n4{background:var(--g4)} .nav a.n5{background:var(--g5)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px 26px;margin:18px 0}
+.card h2{font-size:24px}.lead{color:var(--ink-soft)}
+.teacher{border-left:8px solid var(--blue)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.pill{display:inline-flex;align-items:center;gap:8px;background:#f4f8fc;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:14px;font-weight:500}
+.dot{width:14px;height:14px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(0,0,0,.12)}
+.d-red{background:var(--w-red)}.d-black{background:var(--w-black)}.d-yellow{background:var(--w-yellow)}.d-green{background:var(--w-green)}.d-blue{background:var(--w-blue)}
+.note{background:#fff7e8;border:1px solid #f3dca0;border-radius:14px;padding:12px 16px;margin:14px 0;font-size:14.5px}
+.note b{color:#b9750a}
+.warn{background:#fff0f0;border:1px solid #f3b5b5;border-radius:14px;padding:12px 16px;margin:14px 0;font-size:14.5px}
+.warn b{color:#c0392b}
+table.sub{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+table.sub th,table.sub td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+table.sub th{background:#f1f6fc;font-weight:700}
+.timeline{list-style:none;margin:8px 0 0;padding:0}
+.timeline li{display:flex;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.timeline li:last-child{border:0}
+.timeline .t{flex:0 0 70px;font-weight:800;color:var(--blue);font-family:"Baloo 2",sans-serif}
+
+.group{scroll-margin-top:64px}
+.gtab{display:inline-flex;align-items:center;gap:12px;color:#fff;font-weight:800;font-family:"Baloo 2",sans-serif;font-size:15px;padding:8px 18px;border-radius:999px 999px 0 0;margin-bottom:-1px;position:relative;z-index:2}
+.gcard{border-radius:0 22px 22px 22px}
+.g1 .gtab{background:var(--g1)} .g1 .gcard{border-top:5px solid var(--g1)}
+.g2 .gtab{background:var(--g2)} .g2 .gcard{border-top:5px solid var(--g2)}
+.g3 .gtab{background:var(--g3)} .g3 .gcard{border-top:5px solid var(--g3)}
+.g4 .gtab{background:var(--g4)} .g4 .gcard{border-top:5px solid var(--g4)}
+.g5 .gtab{background:var(--g5)} .g5 .gcard{border-top:5px solid var(--g5)}
+.gnum{background:rgba(255,255,255,.25);width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.gcard h2{font-size:26px;margin-bottom:2px}
+.members{color:var(--ink-soft);font-size:14px;margin:2px 0 4px}
+.play1{font-size:16px;font-weight:700;margin:10px 0 2px}
+.sec-h{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:18px;margin:22px 0 8px;display:flex;align-items:center;gap:9px}
+.sec-h .ic{width:30px;height:30px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+
+.mat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.mat label{display:flex;gap:9px;align-items:flex-start;background:#f7fafd;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:14px;cursor:pointer}
+.mat input{margin-top:4px;width:16px;height:16px;flex:0 0 auto}
+.mat .q{margin-left:auto;font-weight:800;color:var(--blue);font-size:13px;white-space:nowrap}
+
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding:12px 0 12px 52px;border-bottom:1px dashed var(--line)}
+ol.steps>li:last-child{border:0}
+ol.steps>li:before{content:counter(s);position:absolute;left:0;top:11px;width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-family:"Baloo 2",sans-serif;display:flex;align-items:center;justify-content:center;font-size:16px}
+.g1 ol.steps>li:before{background:var(--g1)} .g2 ol.steps>li:before{background:var(--g2)}
+.g3 ol.steps>li:before{background:var(--g3)} .g4 ol.steps>li:before{background:var(--g4)} .g5 ol.steps>li:before{background:var(--g5)}
+.wire{display:inline-flex;align-items:center;gap:6px;background:#f1f6fc;border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-weight:700;font-size:13.5px;white-space:nowrap}
+.pin{background:#11233a;color:#fff;border-radius:6px;padding:1px 8px;font-weight:800;font-size:13px;font-family:"Baloo 2",monospace;letter-spacing:.5px}
+.tip{color:var(--ink-soft);font-size:13.5px;display:block;margin-top:3px}
+
+.diagram{background:#eef4fb;border:1px solid var(--line);border-radius:16px;padding:10px;margin-top:6px}
+.diagram svg{width:100%;height:auto;display:block}
+.svgcap{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:4px}
+
+table.map{width:100%;border-collapse:collapse;margin:12px 0 0;font-size:13.5px}
+table.map th,table.map td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+table.map th{background:#f1f6fc}
+.sw{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-1px;margin-right:5px;border:1px solid rgba(0,0,0,.15)}
+
+.play{background:#f6f3fc;border:1px solid #e2d8f5;border-radius:14px;padding:6px 18px;margin-top:6px}
+.g1 .play{background:#fdf1ed;border-color:#f6cfc2}.g2 .play{background:#eef8f6;border-color:#bfe5df}
+.g4 .play{background:#eef7f0;border-color:#c4e3cd}.g5 .play{background:#eef3fc;border-color:#cad9f3}
+.play ul{margin:10px 0;padding-left:20px}
+
+details.code{margin-top:14px;border:1px dashed var(--blue);border-radius:14px;overflow:hidden;background:#0e1726}
+details.code>summary{cursor:pointer;list-style:none;padding:12px 16px;background:#11233a;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+details.code>summary:before{content:"▶";font-size:11px;transition:.2s}
+details.code[open]>summary:before{transform:rotate(90deg)}
+details.code pre{margin:0;padding:16px;overflow:auto;color:#d7e3f4;font-size:12.5px;line-height:1.6;font-family:ui-monospace,Menlo,Consolas,monospace}
+.cm{color:#7f9bbf}.kw{color:#79c0ff}.st{color:#a5d6ff}.fn{color:#ffd479}
+
+footer{text-align:center;color:var(--ink-soft);font-size:13px;margin-top:30px}
+@media (max-width:560px){.card{padding:18px 16px}ol.steps>li{padding-left:46px}.hero{padding:26px 20px}}
+@media print{body{background:#fff}.nav{display:none}.card,.hero{box-shadow:none}details.code{display:none}.group{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<!-- ===================== 可重複使用的零件圖形 (SVG 符號) ===================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="holes" width="11" height="11" patternUnits="userSpaceOnUse">
+      <circle cx="5.5" cy="5.5" r="1.6" fill="#c4ccd4"/>
+    </pattern>
+    <radialGradient id="gloss" cx="38%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity=".15"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity=".12"/>
+    </radialGradient>
+
+    <!-- Arduino UNO（本地座標 0..340 寬, 0..210 高） -->
+    <symbol id="uno" viewBox="0 0 340 210">
+      <rect x="4" y="44" width="40" height="40" rx="3" fill="#c2c8ce" stroke="#9aa1a8"/>
+      <rect x="8" y="118" width="34" height="32" rx="3" fill="#1a1a1a"/>
+      <rect x="20" y="10" width="312" height="190" rx="10" fill="#0a8d96" stroke="#066b72" stroke-width="2"/>
+      <rect x="150" y="92" width="74" height="48" rx="4" fill="#15171a"/>
+      <text x="187" y="121" fill="#7d8a8c" font-size="11" text-anchor="middle" font-family="Baloo 2,sans-serif">UNO</text>
+      <circle cx="300" cy="150" r="9" fill="#0a6b72" stroke="#055056"/>
+      <!-- 上排數位腳黑條 -->
+      <rect x="66" y="14" width="258" height="20" rx="3" fill="#15171a"/>
+      <text x="70" y="50" fill="#d9f3f5" font-size="9" font-family="Baloo 2,sans-serif">DIGITAL</text>
+      <!-- 下排電源/類比黑條 -->
+      <rect x="66" y="176" width="258" height="20" rx="3" fill="#15171a"/>
+      <text x="70" y="172" fill="#d9f3f5" font-size="9" font-family="Baloo 2,sans-serif">POWER / ANALOG</text>
+    </symbol>
+
+    <!-- 麵包板 -->
+    <symbol id="bb" viewBox="0 0 320 96">
+      <rect x="0" y="0" width="320" height="96" rx="8" fill="#fbfcfd" stroke="#d3dae1"/>
+      <rect x="10" y="8" width="300" height="2.5" fill="#e0483f"/><rect x="10" y="85" width="300" height="2.5" fill="#3777d6"/>
+      <rect x="10" y="14" width="300" height="26" fill="url(#holes)"/>
+      <rect x="10" y="52" width="300" height="26" fill="url(#holes)"/>
+      <line x1="160" y1="44" x2="160" y2="52" stroke="#cdd5dd"/>
+    </symbol>
+
+    <!-- 發光電玩按鈕：圓頂 + 4 隻腳(2開關,2燈)。dome 用 currentColor -->
+    <symbol id="btn" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="60" rx="46" ry="40" fill="#222" opacity=".25"/>
+      <circle cx="55" cy="50" r="42" fill="#1c1c1c"/>
+      <circle cx="55" cy="48" r="35" fill="currentColor"/>
+      <circle cx="55" cy="48" r="35" fill="url(#gloss)"/>
+      <rect x="30" y="86" width="7" height="14" rx="2" fill="#caa14a"/>
+      <rect x="46" y="86" width="7" height="14" rx="2" fill="#caa14a"/>
+      <rect x="62" y="86" width="7" height="14" rx="2" fill="#caa14a"/>
+      <rect x="78" y="86" width="7" height="14" rx="2" fill="#caa14a"/>
+    </symbol>
+
+    <!-- FSR 壓力片 -->
+    <symbol id="fsr" viewBox="0 0 120 70">
+      <circle cx="34" cy="34" r="26" fill="#3a3a3a" stroke="#222"/>
+      <circle cx="34" cy="34" r="18" fill="#555"/>
+      <rect x="58" y="29" width="56" height="10" rx="3" fill="#8fd0c8"/>
+      <rect x="110" y="26" width="6" height="7" fill="#caa14a"/><rect x="110" y="36" width="6" height="7" fill="#caa14a"/>
+    </symbol>
+
+    <!-- 超音波 HC-SR04 -->
+    <symbol id="hc" viewBox="0 0 150 80">
+      <rect x="6" y="8" width="138" height="56" rx="6" fill="#1746c4" stroke="#0f2f86"/>
+      <circle cx="44" cy="36" r="22" fill="#9aa0a6" stroke="#6f757b" stroke-width="3"/>
+      <circle cx="106" cy="36" r="22" fill="#9aa0a6" stroke="#6f757b" stroke-width="3"/>
+      <rect x="40" y="64" width="6" height="12" fill="#caa14a"/><rect x="62" y="64" width="6" height="12" fill="#caa14a"/>
+      <rect x="84" y="64" width="6" height="12" fill="#caa14a"/><rect x="106" y="64" width="6" height="12" fill="#caa14a"/>
+    </symbol>
+
+    <!-- 滾珠開關 -->
+    <symbol id="tilt" viewBox="0 0 80 50">
+      <rect x="14" y="10" width="52" height="22" rx="11" fill="#b9c0c7" stroke="#8b9298"/>
+      <circle cx="30" cy="21" r="6" fill="#6b7177"/>
+      <rect x="20" y="32" width="5" height="14" fill="#caa14a"/><rect x="55" y="32" width="5" height="14" fill="#caa14a"/>
+    </symbol>
+
+    <!-- 小 LED：dome 用 currentColor -->
+    <symbol id="led" viewBox="0 0 50 70">
+      <circle cx="25" cy="22" r="17" fill="currentColor"/><circle cx="25" cy="22" r="17" fill="url(#gloss)"/>
+      <rect x="18" y="36" width="4" height="30" fill="#9a9a9a"/><rect x="28" y="36" width="4" height="24" fill="#9a9a9a"/>
+    </symbol>
+
+    <!-- 蜂鳴器 -->
+    <symbol id="buz" viewBox="0 0 64 64">
+      <circle cx="32" cy="28" r="24" fill="#1b1b1b"/><circle cx="32" cy="28" r="4" fill="#444"/>
+      <text x="20" y="20" fill="#fff" font-size="12">+</text>
+      <rect x="22" y="50" width="4" height="13" fill="#9a9a9a"/><rect x="38" y="50" width="4" height="13" fill="#9a9a9a"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <h1>自己動手做：接線手冊 🛠️</h1>
+    <p>照著圖一條線一條線接，就能做出可以玩的五個樂齡互動裝置。大零件用鱷魚夾、小零件插麵包板，盡量不用焊接。</p>
+    <div class="chips">
+      <span>🧲 大零件用鱷魚夾</span>
+      <span>🍞 小零件插麵包板</span>
+      <span>🌈 接線照顏色對</span>
+      <span>💡 發光按鈕會亮</span>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <a class="n0" href="#start">先看這裡</a>
+    <a class="n1" href="#g1">第一組</a>
+    <a class="n2" href="#g2">第二組</a>
+    <a class="n3" href="#g3">第三組</a>
+    <a class="n4" href="#g4">第四組</a>
+    <a class="n5" href="#g5">第五組</a>
+  </nav>
+
+  <!-- ============ 共同基礎 ============ -->
+  <section id="start" class="card teacher" style="scroll-margin-top:64px">
+    <h2>🚦 開始之前：每組都要先懂的事</h2>
+
+    <div class="sec-h"><span class="ic" style="background:var(--blue)">1</span>線的顏色代表什麼</div>
+    <div class="legend">
+      <span class="pill"><span class="dot d-red"></span>紅線＝電（5V／正極＋）</span>
+      <span class="pill"><span class="dot d-black"></span>黑線＝接地（GND／負極−）</span>
+      <span class="pill"><span class="dot d-yellow"></span>黃線＝訊號（感測器/喇叭）</span>
+      <span class="pill"><span class="dot d-green"></span>綠線＝接開關/燈</span>
+      <span class="pill"><span class="dot d-blue"></span>藍線＝其他訊號</span>
+    </div>
+
+    <div class="sec-h"><span class="ic" style="background:var(--blue)">2</span>麵包板與小 LED</div>
+    <p>麵包板上下的長線是「電源軌」：紅排接 <span class="pin">5V</span>、藍排接 <span class="pin">GND</span>，中間每一直排（5 洞）相通。小 LED 的<b>長腳</b>要串一顆 <span class="wire">220Ω</span> 再接訊號腳，<b>短腳</b>接 GND。</p>
+
+    <div class="sec-h"><span class="ic" style="background:var(--blue)">3</span>認識「發光按鈕」的 4 隻腳</div>
+    <p>你的發光大按鈕底部有 <b>4 隻腳</b>：兩隻是<b>開關</b>（按下才接通，不分正負），另外兩隻是<b>燈</b>（有 ＋ 和 −）。「開關」接給 Arduino 偵測有沒有被按；「燈」直接接 Arduino 數位腳，就能由程式控制亮滅。</p>
+
+    <div class="sec-h"><span class="ic" style="background:var(--blue)">4</span>發光按鈕的燈：直接接法（最簡單）</div>
+    <p>這顆按鈕的燈在 5V 就會亮，所以直接接就好：把<b>燈的 ＋腳接到一個數位腳（例如 D8）</b>，<b>燈的 −腳接 GND</b>。程式 <span class="pin">digitalWrite(D8, HIGH)</span> 就亮、<span class="pin">LOW</span> 就暗。</p>
+    <div class="diagram">
+      <svg viewBox="0 0 760 200" font-family="Noto Sans TC,sans-serif">
+        <use href="#uno" x="40" y="20" width="300" height="186"/>
+        <use href="#btn" x="560" y="30" width="130" height="130" style="color:#E5484D"/>
+        <text x="625" y="178" font-size="12" text-anchor="middle">發光按鈕的「燈」</text>
+        <!-- + leg to D8 -->
+        <path d="M585 150 C 520 190 320 90 230 60" stroke="#2FA84F" stroke-width="4" fill="none"/>
+        <text x="360" y="78" font-size="12" fill="#2FA84F">燈 ＋ → D8（數位腳）</text>
+        <circle cx="218" cy="38" r="7" fill="none" stroke="#2FA84F" stroke-width="2.5"/>
+        <text x="218" y="30" font-size="10" text-anchor="middle" font-family="Baloo 2,sans-serif">D8</text>
+        <!-- - leg to GND -->
+        <path d="M615 150 C 560 200 300 200 250 175" stroke="#2b2b2b" stroke-width="4" fill="none"/>
+        <text x="380" y="200" font-size="12" fill="#444">燈 − → GND</text>
+        <circle cx="238" cy="170" r="7" fill="none" stroke="#2b2b2b" stroke-width="2.5"/>
+        <text x="238" y="190" font-size="10" text-anchor="middle" font-family="Baloo 2,sans-serif">GND</text>
+      </svg>
+      <div class="svgcap">燈 ＋腳 → 任一數位腳（程式控制亮滅）；燈 −腳 → GND。開關的兩隻腳另外接（見各組接線圖）。</div>
+    </div>
+    <div class="note"><b>小提醒：</b>想更保險可在燈的 ＋腳串一顆 <span class="wire">220Ω</span> 再接腳位（會稍微暗一點）。若日後想讓 12V 燈「全亮到最亮」，才需要進階的 9V 電池＋電晶體；本工作坊用 5V 直接接即可。</div>
+
+    <div class="warn"><b>安全提醒：</b>烙鐵很燙，焊接只由老師操作。學生負責夾鱷魚夾、插麵包板。接好線、確認紅黑沒有相碰後才插電。</div>
+  </section>
+
+  <!-- ============ 第一組 ============ -->
+  <section id="g1" class="group g1">
+    <span class="gtab"><span class="gnum">1</span> 不老神手 · 握力 PK</span>
+    <div class="card gcard">
+      <h2>不老神手 — 一捏見高下 💪</h2>
+      <div class="members">林予晴 · 周艾蘿 · 吳依淳</div>
+      <div class="play1">🎯 玩法：兩人各捏一片壓力片，<b>誰比較大力，誰的發光按鈕就亮＋叮咚</b>。</div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g1)">📦</span>材料清單</div>
+      <div class="mat">
+        <label><input type="checkbox">Arduino Uno<span class="q">×1</span></label>
+        <label><input type="checkbox">麵包板<span class="q">×1</span></label>
+        <label><input type="checkbox">FSR 壓力感測器<span class="q">×2</span></label>
+        <label><input type="checkbox">10kΩ 電阻<span class="q">×2</span></label>
+        <label><input type="checkbox">發光按鈕（紅、綠）<span class="q">×2</span></label>
+        <label><input type="checkbox">220Ω 電阻（按鈕燈用，選用）<span class="q">×2</span></label>
+        <label><input type="checkbox">主動式蜂鳴器<span class="q">×1</span></label>
+        <label><input type="checkbox">鱷魚夾線＋杜邦線<span class="q">數條</span></label>
+      </div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g1)">🗺️</span>接線圖（看著接）</div>
+      <div class="diagram">
+        <svg viewBox="0 0 760 430" font-family="Noto Sans TC,sans-serif">
+          <use href="#uno" x="210" y="210" width="340" height="210"/>
+          <!-- FSR A -->
+          <use href="#fsr" x="40" y="40" width="150" height="88"/>
+          <text x="60" y="36" font-size="12" fill="#EE6C4D" font-weight="700">FSR 玩家1</text>
+          <!-- FSR B -->
+          <use href="#fsr" x="40" y="150" width="150" height="88"/>
+          <text x="60" y="146" font-size="12" fill="#EE6C4D" font-weight="700">FSR 玩家2</text>
+          <!-- buttons -->
+          <use href="#btn" x="600" y="30" width="120" height="120" style="color:#E5484D"/>
+          <text x="660" y="170" font-size="12" text-anchor="middle">玩家1 紅燈鈕</text>
+          <use href="#btn" x="600" y="190" width="120" height="120" style="color:#2FA84F"/>
+          <text x="660" y="330" font-size="12" text-anchor="middle">玩家2 綠燈鈕</text>
+          <!-- wires FSR A: 5V + signal A0 -->
+          <path d="M186 70 C 250 70 230 388 305 390" stroke="#E5484D" stroke-width="4" fill="none"/>
+          <text x="250" y="62" font-size="11" fill="#c0392b">5V</text>
+          <path d="M186 84 C 320 120 330 360 390 388" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <text x="196" y="300" font-size="11" fill="#b8810a">FSR1 訊號→ A0</text>
+          <!-- FSR B -->
+          <path d="M186 180 C 250 200 250 388 322 390" stroke="#2b2b2b" stroke-width="4" fill="none"/>
+          <text x="250" y="210" font-size="11" fill="#444">GND端有10kΩ</text>
+          <path d="M186 194 C 330 230 350 360 406 388" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <text x="196" y="330" font-size="11" fill="#b8810a">FSR2 訊號→ A1</text>
+          <!-- buttons LED control via driver to D8/D9 -->
+          <path d="M600 96 C 560 110 540 215 504 218" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <text x="520" y="150" font-size="11" fill="#2FA84F">紅燈鈕 燈→ D8</text>
+          <path d="M600 250 C 540 250 540 222 488 220" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <text x="520" y="270" font-size="11" fill="#2FA84F">綠燈鈕 燈→ D9</text>
+          <!-- buzzer -->
+          <use href="#buz" x="690" y="350" width="60" height="60"/>
+          <text x="720" y="420" font-size="11" text-anchor="middle">蜂鳴器 → D7</text>
+          <path d="M700 380 C 560 400 470 230 455 220" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <!-- pin rings -->
+          <g font-size="10" font-family="Baloo 2,sans-serif">
+            <circle cx="372.5" cy="220" r="7" fill="none" stroke="#2FA84F" stroke-width="2.5"/><text x="372.5" y="207" text-anchor="middle">D8</text>
+            <circle cx="356" cy="220" r="7" fill="none" stroke="#2FA84F" stroke-width="2.5"/><text x="356" y="207" text-anchor="middle">D9</text>
+            <circle cx="389" cy="220" r="7" fill="none" stroke="#EFA50A" stroke-width="2.5"/><text x="405" y="223" text-anchor="middle">D7</text>
+            <circle cx="305" cy="390" r="7" fill="none" stroke="#E5484D" stroke-width="2.5"/><text x="305" y="410" text-anchor="middle">5V</text>
+            <circle cx="390" cy="390" r="7" fill="none" stroke="#EFA50A" stroke-width="2.5"/><text x="390" y="410" text-anchor="middle">A0</text>
+            <circle cx="406" cy="390" r="7" fill="none" stroke="#EFA50A" stroke-width="2.5"/><text x="430" y="405" text-anchor="middle">A1</text>
+          </g>
+        </svg>
+      </div>
+      <table class="map">
+        <tr><th>線</th><th>從</th><th>到</th></tr>
+        <tr><td><span class="sw" style="background:#E5484D"></span>紅</td><td>兩片 FSR 各一隻腳</td><td>麵包板 5V 電源軌</td></tr>
+        <tr><td><span class="sw" style="background:#2b2b2b"></span>黑</td><td>FSR 另一腳 + 10kΩ 接 GND</td><td>同一排再拉訊號線</td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>FSR1 / FSR2 訊號</td><td><span class="pin">A0</span> / <span class="pin">A1</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>紅鈕燈＋ / 綠鈕燈＋（−接GND）</td><td><span class="pin">D8</span> / <span class="pin">D9</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>蜂鳴器 ＋</td><td><span class="pin">D7</span></td></tr>
+      </table>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g1)">🔌</span>接線步驟</div>
+      <ol class="steps">
+        <li>做電源軌：<span class="wire"><span class="dot d-red"></span>紅</span> 5V→紅排、<span class="wire"><span class="dot d-black"></span>黑</span> GND→藍排。</li>
+        <li><b>玩家1 FSR</b>：一腳夾紅線接 5V；另一腳接麵包板某排，同排插 10kΩ 接 GND，再從這排拉<span class="wire"><span class="dot d-yellow"></span>黃線</span>到 <span class="pin">A0</span>。</li>
+        <li><b>玩家2 FSR</b>：同上，黃線接 <span class="pin">A1</span>。</li>
+        <li><b>紅燈鈕</b>：燈 ＋腳接 <span class="pin">D8</span>、−腳接 GND（想保險可串220Ω）。</li>
+        <li><b>綠燈鈕</b>：燈 ＋腳接 <span class="pin">D9</span>、−腳接 GND。</li>
+        <li><b>蜂鳴器</b>：＋接 <span class="pin">D7</span>，−接 GND。檢查無短路 → 插電。</li>
+      </ol>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g1)">🎮</span>怎麼玩</div>
+      <div class="play"><ul>
+        <li>兩人各握一片包好的壓力片。</li><li>同時用力捏。</li>
+        <li>力氣大的那邊發光按鈕亮起＋叮咚得分。</li><li>差不多時兩盞都亮，再比一次。</li>
+      </ul></div>
+
+      <details class="code"><summary>📄 老師用：程式碼</summary>
+<pre><span class="cm">// 第一組 不老神手 握力PK</span>
+<span class="kw">const int</span> FSR_A=A0, FSR_B=A1;
+<span class="kw">const int</span> LED_A=8, LED_B=9, BUZZER=7;     <span class="cm">// D8/D9 接按鈕燈（＋腳，−接GND）</span>
+<span class="kw">const int</span> TH=120;
+<span class="kw">void</span> <span class="fn">setup</span>(){ <span class="fn">pinMode</span>(LED_A,OUTPUT);<span class="fn">pinMode</span>(LED_B,OUTPUT);<span class="fn">pinMode</span>(BUZZER,OUTPUT);<span class="fn">Serial</span>.<span class="fn">begin</span>(9600);}
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">int</span> a=<span class="fn">analogRead</span>(FSR_A), b=<span class="fn">analogRead</span>(FSR_B);
+  <span class="fn">Serial</span>.<span class="fn">print</span>(a);<span class="fn">Serial</span>.<span class="fn">print</span>(<span class="st">"  "</span>);<span class="fn">Serial</span>.<span class="fn">println</span>(b);
+  <span class="kw">if</span>(a>TH||b>TH){
+    <span class="kw">if</span>(a>b+30){<span class="fn">digitalWrite</span>(LED_A,HIGH);<span class="fn">digitalWrite</span>(LED_B,LOW);<span class="fn">tone</span>(BUZZER,880,120);}
+    <span class="kw">else if</span>(b>a+30){<span class="fn">digitalWrite</span>(LED_B,HIGH);<span class="fn">digitalWrite</span>(LED_A,LOW);<span class="fn">tone</span>(BUZZER,880,120);}
+    <span class="kw">else</span>{<span class="fn">digitalWrite</span>(LED_A,HIGH);<span class="fn">digitalWrite</span>(LED_B,HIGH);}
+  }<span class="kw">else</span>{<span class="fn">digitalWrite</span>(LED_A,LOW);<span class="fn">digitalWrite</span>(LED_B,LOW);}
+  <span class="fn">delay</span>(60);
+}</pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第二組 ============ -->
+  <section id="g2" class="group g2">
+    <span class="gtab"><span class="gnum">2</span> 輕輕鬆鬆 · 平衡感</span>
+    <div class="card gcard">
+      <h2>平衡小球 — 手要穩、別歪掉 ⚖️</h2>
+      <div class="members">沈泓文 · 陳劭紘 · 楊浚玟</div>
+      <div class="play1">🎯 玩法：兩人各拿手把，手越平越穩；誰歪了發光小球就往誰那邊滾，滾到自己這端就輸。</div>
+      <div class="note"><b>替代：</b>加速度計太難 → 用<b>滾珠開關</b>（歪了就接通），5 顆小 LED 當會移動的小球。這組用小 LED 即可，不必用發光按鈕。</div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g2)">📦</span>材料清單</div>
+      <div class="mat">
+        <label><input type="checkbox">Arduino Uno<span class="q">×1</span></label>
+        <label><input type="checkbox">麵包板<span class="q">×1</span></label>
+        <label><input type="checkbox">滾珠開關<span class="q">×2</span></label>
+        <label><input type="checkbox">5mm LED（燈條）<span class="q">×5</span></label>
+        <label><input type="checkbox">220Ω 電阻<span class="q">×5</span></label>
+        <label><input type="checkbox">主動式蜂鳴器<span class="q">×1</span></label>
+        <label><input type="checkbox">鱷魚夾線＋杜邦線<span class="q">數條</span></label>
+      </div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g2)">🗺️</span>接線圖</div>
+      <div class="diagram">
+        <svg viewBox="0 0 760 400" font-family="Noto Sans TC,sans-serif">
+          <use href="#uno" x="210" y="180" width="340" height="210"/>
+          <!-- 5 LEDs row -->
+          <g>
+            <use href="#led" x="120" y="20" width="40" height="56" style="color:#2FA84F"/><text x="140" y="92" font-size="10" text-anchor="middle">D3</text>
+            <use href="#led" x="210" y="20" width="40" height="56" style="color:#2FA84F"/><text x="230" y="92" font-size="10" text-anchor="middle">D4</text>
+            <use href="#led" x="300" y="20" width="40" height="56" style="color:#2D6CDF"/><text x="320" y="92" font-size="10" text-anchor="middle">D5 中</text>
+            <use href="#led" x="390" y="20" width="40" height="56" style="color:#2FA84F"/><text x="410" y="92" font-size="10" text-anchor="middle">D6</text>
+            <use href="#led" x="480" y="20" width="40" height="56" style="color:#2FA84F"/><text x="500" y="92" font-size="10" text-anchor="middle">D7</text>
+          </g>
+          <text x="120" y="14" font-size="11" fill="#179E8F">⬅玩家A</text><text x="470" y="14" font-size="11" fill="#179E8F">玩家B➡</text>
+          <!-- tilt switches -->
+          <use href="#tilt" x="40" y="250" width="100" height="62"/><text x="90" y="330" font-size="12" text-anchor="middle">滾珠A→D2</text>
+          <use href="#tilt" x="620" y="250" width="100" height="62"/><text x="670" y="330" font-size="12" text-anchor="middle">滾珠B→D8</text>
+          <use href="#buz" x="600" y="120" width="56" height="56"/><text x="628" y="186" font-size="11" text-anchor="middle">蜂鳴器→D9</text>
+          <!-- wires -->
+          <path d="M140 76 C 150 130 250 170 300 195" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M500 76 C 520 130 470 170 470 195" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M120 285 C 180 285 250 320 300 360" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M620 285 C 560 285 500 330 470 360" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M628 150 C 540 150 500 175 470 195" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <g font-size="10" font-family="Baloo 2,sans-serif">
+            <circle cx="471.5" cy="190" r="7" fill="none" stroke="#179E8F" stroke-width="2.5"/><text x="490" y="186" text-anchor="middle">D2~D9</text>
+          </g>
+        </svg>
+      </div>
+      <table class="map">
+        <tr><th>線</th><th>從</th><th>到</th></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>5 顆 LED（各串 220Ω）</td><td><span class="pin">D3</span><span class="pin">D4</span><span class="pin">D5</span><span class="pin">D6</span><span class="pin">D7</span></td></tr>
+        <tr><td><span class="sw" style="background:#2b2b2b"></span>黑</td><td>每顆 LED 短腳、滾珠各一腳</td><td>GND 電源軌</td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>滾珠A / 滾珠B</td><td><span class="pin">D2</span> / <span class="pin">D8</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>蜂鳴器 ＋</td><td><span class="pin">D9</span></td></tr>
+      </table>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g2)">🔌</span>接線步驟</div>
+      <ol class="steps">
+        <li>電源軌：紅 5V→紅排、黑 GND→藍排。</li>
+        <li><b>5 顆 LED 排一排</b>，各串 220Ω 接 <span class="pin">D3</span>~<span class="pin">D7</span>（左→右），短腳全接 GND。D5 是起點。</li>
+        <li><b>滾珠A</b>：一腳接 GND，一腳接 <span class="pin">D2</span>。</li>
+        <li><b>滾珠B</b>：一腳接 GND，一腳接 <span class="pin">D8</span>。</li>
+        <li><b>蜂鳴器</b>：＋接 <span class="pin">D9</span>，−接 GND。</li>
+        <li>插電測試：放平不動、歪了小球往那邊滾；方向相反就把滾珠上下翻裝。</li>
+      </ol>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g2)">🎮</span>怎麼玩</div>
+      <div class="play"><ul>
+        <li>手把放平，小球停中央。</li><li>誰歪小球往誰滾一格（嗶）。</li>
+        <li>撐穩撐正把小球推回去。</li><li>滾到誰的末端誰就輸，全燈閃爍慶祝。</li>
+      </ul></div>
+
+      <details class="code"><summary>📄 老師用：程式碼</summary>
+<pre><span class="cm">// 第二組 平衡小球</span>
+<span class="kw">const int</span> TILT_A=2, TILT_B=8, BUZZER=9;
+<span class="kw">const int</span> LED[5]={3,4,5,6,7};
+<span class="kw">int</span> pos=2;
+<span class="kw">void</span> <span class="fn">show</span>(){<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;5;i++)<span class="fn">digitalWrite</span>(LED[i],i==pos?HIGH:LOW);}
+<span class="kw">void</span> <span class="fn">win</span>(){<span class="kw">for</span>(<span class="kw">int</span> k=0;k&lt;6;k++){<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;5;i++)<span class="fn">digitalWrite</span>(LED[i],HIGH);<span class="fn">tone</span>(BUZZER,1047,150);<span class="fn">delay</span>(180);
+  <span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;5;i++)<span class="fn">digitalWrite</span>(LED[i],LOW);<span class="fn">delay</span>(120);}pos=2;<span class="fn">show</span>();}
+<span class="kw">void</span> <span class="fn">setup</span>(){<span class="fn">pinMode</span>(TILT_A,INPUT_PULLUP);<span class="fn">pinMode</span>(TILT_B,INPUT_PULLUP);
+  <span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;5;i++)<span class="fn">pinMode</span>(LED[i],OUTPUT);<span class="fn">pinMode</span>(BUZZER,OUTPUT);<span class="fn">show</span>();}
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">if</span>(<span class="fn">digitalRead</span>(TILT_A)==HIGH&amp;&amp;pos>0){pos--;<span class="fn">tone</span>(BUZZER,500,60);}
+  <span class="kw">if</span>(<span class="fn">digitalRead</span>(TILT_B)==HIGH&amp;&amp;pos&lt;4){pos++;<span class="fn">tone</span>(BUZZER,500,60);}
+  <span class="fn">show</span>(); <span class="kw">if</span>(pos==0||pos==4)<span class="fn">win</span>(); <span class="fn">delay</span>(150);
+}</pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第三組 ============ -->
+  <section id="g3" class="group g3">
+    <span class="gtab"><span class="gnum">3</span> 樂齡 · 甩手棒 PK</span>
+    <div class="card gcard">
+      <h2>甩手棒 — 一分鐘甩越多越棒 🏏</h2>
+      <div class="members">黃宇昕 · 饒語芯 · 陳之謙</div>
+      <div class="play1">🎯 玩法：兩人各拿甩手棒，按發光「開始鈕」後用力甩，<b>一分鐘甩較多次者贏</b>，贏家的發光按鈕亮。</div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g3)">📦</span>材料清單</div>
+      <div class="mat">
+        <label><input type="checkbox">Arduino Uno<span class="q">×1</span></label>
+        <label><input type="checkbox">麵包板<span class="q">×1</span></label>
+        <label><input type="checkbox">滾珠開關<span class="q">×2</span></label>
+        <label><input type="checkbox">發光按鈕（開始＋兩勝負燈）<span class="q">×3</span></label>
+        <label><input type="checkbox">主動式蜂鳴器<span class="q">×1</span></label>
+        <label><input type="checkbox">鱷魚夾線＋杜邦線<span class="q">數條</span></label>
+      </div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g3)">🗺️</span>接線圖</div>
+      <div class="diagram">
+        <svg viewBox="0 0 760 420" font-family="Noto Sans TC,sans-serif">
+          <use href="#uno" x="210" y="200" width="340" height="210"/>
+          <use href="#tilt" x="40" y="40" width="100" height="62"/><text x="90" y="120" font-size="12" text-anchor="middle">甩手棒A→D2</text>
+          <use href="#tilt" x="40" y="150" width="100" height="62"/><text x="90" y="230" font-size="12" text-anchor="middle">甩手棒B→D3</text>
+          <use href="#btn" x="40" y="270" width="110" height="110" style="color:#EFA50A"/><text x="95" y="390" font-size="12" text-anchor="middle">開始鈕→D4 / 燈D5</text>
+          <use href="#btn" x="610" y="30" width="110" height="110" style="color:#E5484D"/><text x="665" y="150" font-size="12" text-anchor="middle">玩家A 燈→D8</text>
+          <use href="#btn" x="610" y="180" width="110" height="110" style="color:#2FA84F"/><text x="665" y="300" font-size="12" text-anchor="middle">玩家B 燈→D9</text>
+          <use href="#buz" x="600" y="330" width="56" height="56"/><text x="628" y="396" font-size="11" text-anchor="middle">蜂鳴器→D7</text>
+          <path d="M140 70 C 220 70 260 200 322 380" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M140 180 C 240 200 300 250 340 380" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M150 320 C 250 320 300 390 360 388" stroke="#2b2b2b" stroke-width="4" fill="none"/>
+          <path d="M610 90 C 560 110 540 208 504 212" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M610 240 C 540 240 530 215 488 213" stroke="#2FA84F" stroke-width="4" fill="none"/>
+          <path d="M628 355 C 540 380 470 230 455 213" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <g font-size="10" font-family="Baloo 2,sans-serif"><circle cx="455" cy="210" r="7" fill="none" stroke="#7C5CD6" stroke-width="2.5"/><text x="475" y="206" text-anchor="middle">D2~D9</text></g>
+        </svg>
+      </div>
+      <table class="map">
+        <tr><th>線</th><th>從</th><th>到</th></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>甩手棒A / B 滾珠（另一腳 GND）</td><td><span class="pin">D2</span> / <span class="pin">D3</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>開始鈕 開關（另一腳 GND）</td><td><span class="pin">D4</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>開始鈕燈＋ / A燈＋ / B燈＋（−接GND）</td><td><span class="pin">D5</span> / <span class="pin">D8</span> / <span class="pin">D9</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>蜂鳴器 ＋</td><td><span class="pin">D7</span></td></tr>
+      </table>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g3)">🔌</span>接線步驟</div>
+      <ol class="steps">
+        <li>電源軌：紅 5V→紅排、黑 GND→藍排。</li>
+        <li><b>甩手棒A、B 滾珠</b>：各一腳接 GND，另一腳接 <span class="pin">D2</span>、<span class="pin">D3</span>。</li>
+        <li><b>開始鈕的開關</b>：一腳接 GND，一腳接 <span class="pin">D4</span>。它的燈 ＋腳接 <span class="pin">D5</span>、−腳接 GND。</li>
+        <li><b>玩家A 燈鈕</b>：燈 ＋腳接 <span class="pin">D8</span>、−腳接 GND。</li>
+        <li><b>玩家B 燈鈕</b>：燈 ＋腳接 <span class="pin">D9</span>、−腳接 GND。</li>
+        <li><b>蜂鳴器</b>：＋接 <span class="pin">D7</span>，−接 GND。</li>
+      </ol>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g3)">🎮</span>怎麼玩</div>
+      <div class="play"><ul>
+        <li>按發光開始鈕（叮），燈亮代表比賽中、開始 1 分鐘。</li>
+        <li>用力甩棒，每甩一下嗶一聲。</li>
+        <li>時間到，甩較多次者的發光按鈕閃爍＋勝利音效。</li>
+      </ul></div>
+
+      <details class="code"><summary>📄 老師用：程式碼</summary>
+<pre><span class="cm">// 第三組 甩手棒 PK</span>
+<span class="kw">const int</span> A=2,B=3,START=4, LED_S=5, LED_A=8, LED_B=9, BUZZER=7;
+<span class="kw">long</span> cA=0,cB=0; <span class="kw">int</span> lA=HIGH,lB=HIGH; <span class="kw">bool</span> run=<span class="kw">false</span>; <span class="kw">unsigned long</span> endT=0;
+<span class="kw">void</span> <span class="fn">winBlink</span>(<span class="kw">int</span> led){<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;5;i++){<span class="fn">digitalWrite</span>(led,HIGH);<span class="fn">tone</span>(BUZZER,1047,150);<span class="fn">delay</span>(180);<span class="fn">digitalWrite</span>(led,LOW);<span class="fn">delay</span>(120);}}
+<span class="kw">void</span> <span class="fn">setup</span>(){<span class="fn">pinMode</span>(A,INPUT_PULLUP);<span class="fn">pinMode</span>(B,INPUT_PULLUP);<span class="fn">pinMode</span>(START,INPUT_PULLUP);
+  <span class="fn">pinMode</span>(LED_S,OUTPUT);<span class="fn">pinMode</span>(LED_A,OUTPUT);<span class="fn">pinMode</span>(LED_B,OUTPUT);<span class="fn">pinMode</span>(BUZZER,OUTPUT);}
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">if</span>(!run&amp;&amp;<span class="fn">digitalRead</span>(START)==LOW){cA=cB=0;run=<span class="kw">true</span>;endT=<span class="fn">millis</span>()+60000UL;<span class="fn">digitalWrite</span>(LED_S,HIGH);<span class="fn">tone</span>(BUZZER,1047,300);}
+  <span class="kw">if</span>(run){
+    <span class="kw">int</span> a=<span class="fn">digitalRead</span>(A),b=<span class="fn">digitalRead</span>(B);
+    <span class="kw">if</span>(a!=lA){cA++;<span class="fn">tone</span>(BUZZER,1500,15);}lA=a;
+    <span class="kw">if</span>(b!=lB){cB++;<span class="fn">tone</span>(BUZZER,1800,15);}lB=b;
+    <span class="kw">if</span>(<span class="fn">millis</span>()>endT){run=<span class="kw">false</span>;<span class="fn">digitalWrite</span>(LED_S,LOW);
+      <span class="kw">if</span>(cA>cB)<span class="fn">winBlink</span>(LED_A);<span class="kw">else if</span>(cB>cA)<span class="fn">winBlink</span>(LED_B);<span class="kw">else</span> <span class="fn">tone</span>(BUZZER,440,500);}
+  }<span class="fn">delay</span>(5);
+}</pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第四組 ============ -->
+  <section id="g4" class="group g4">
+    <span class="gtab"><span class="gnum">4</span> 大家動一動 · 跟著舉手</span>
+    <div class="card gcard">
+      <h2>大家動一動 — 舉手到對的高度 🙌</h2>
+      <div class="members">邱宇樂 · 鄭羽芹 · 鍾政穎</div>
+      <div class="play1">🎯 玩法：哪顆發光按鈕亮，就把手舉到那個高度（低/中/高），停住 1 秒過關叮咚，連做 3 個動作。</div>
+      <div class="warn"><b>原構想無法用 Arduino 做：</b>Webcam＋Unity＋MediaPipe 是純軟體 AI。改用超音波量手高度，3 顆發光按鈕當低/中/高提示。</div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g4)">📦</span>材料清單</div>
+      <div class="mat">
+        <label><input type="checkbox">Arduino Uno<span class="q">×1</span></label>
+        <label><input type="checkbox">麵包板<span class="q">×1</span></label>
+        <label><input type="checkbox">超音波 HC-SR04<span class="q">×1</span></label>
+        <label><input type="checkbox">母對母杜邦線<span class="q">×4</span></label>
+        <label><input type="checkbox">發光按鈕（低/中/高）<span class="q">×3</span></label>
+        <label><input type="checkbox">主動式蜂鳴器<span class="q">×1</span></label>
+      </div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g4)">🗺️</span>接線圖</div>
+      <div class="diagram">
+        <svg viewBox="0 0 760 420" font-family="Noto Sans TC,sans-serif">
+          <use href="#uno" x="210" y="210" width="340" height="210"/>
+          <use href="#hc" x="40" y="50" width="180" height="96"/><text x="130" y="40" font-size="12" fill="#3DA35D" font-weight="700">超音波 HC-SR04</text>
+          <text x="40" y="165" font-size="10.5">VCC→5V · GND→GND · Trig→D3 · Echo→D2</text>
+          <use href="#btn" x="600" y="20" width="100" height="100" style="color:#EFA50A"/><text x="650" y="130" font-size="12" text-anchor="middle">低 燈鈕→D5</text>
+          <use href="#btn" x="600" y="150" width="100" height="100" style="color:#EFA50A"/><text x="650" y="260" font-size="12" text-anchor="middle">中 燈鈕→D6</text>
+          <use href="#btn" x="600" y="280" width="100" height="100" style="color:#EFA50A"/><text x="650" y="390" font-size="12" text-anchor="middle">高 燈鈕→D7</text>
+          <use href="#led" x="120" y="250" width="40" height="56" style="color:#2FA84F"/><text x="140" y="322" font-size="11" text-anchor="middle">做對綠燈→D8</text>
+          <use href="#buz" x="120" y="330" width="56" height="56"/><text x="148" y="396" font-size="11" text-anchor="middle">蜂鳴器→D9</text>
+          <!-- ultrasonic 4 wires -->
+          <path d="M150 146 C 200 200 250 380 305 390" stroke="#E5484D" stroke-width="3.5" fill="none"/>
+          <path d="M165 146 C 215 200 260 380 322 390" stroke="#2b2b2b" stroke-width="3.5" fill="none"/>
+          <path d="M180 146 C 250 180 380 215 455 218" stroke="#EFA50A" stroke-width="3.5" fill="none"/>
+          <path d="M195 146 C 260 180 400 218 471 220" stroke="#2D6CDF" stroke-width="3.5" fill="none"/>
+          <!-- button leds -->
+          <path d="M600 70 C 560 90 540 210 504 215" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M600 200 C 545 200 540 218 488 218" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M600 330 C 540 330 470 240 455 220" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M150 278 C 250 278 320 230 372 218" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M150 355 C 250 355 330 240 356 220" stroke="#EFA50A" stroke-width="3.5" fill="none"/>
+          <g font-size="10" font-family="Baloo 2,sans-serif"><circle cx="406" cy="218" r="7" fill="none" stroke="#3DA35D" stroke-width="2.5"/><text x="406" y="240" text-anchor="middle">D2~D9 / 5V GND</text></g>
+        </svg>
+      </div>
+      <table class="map">
+        <tr><th>線</th><th>從（超音波腳）</th><th>到</th></tr>
+        <tr><td><span class="sw" style="background:#E5484D"></span>紅</td><td>VCC</td><td><span class="pin">5V</span></td></tr>
+        <tr><td><span class="sw" style="background:#2b2b2b"></span>黑</td><td>GND</td><td><span class="pin">GND</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>Trig</td><td><span class="pin">D3</span></td></tr>
+        <tr><td><span class="sw" style="background:#2D6CDF"></span>藍</td><td>Echo</td><td><span class="pin">D2</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>低/中/高 燈鈕 ＋腳（−接GND）</td><td><span class="pin">D5</span><span class="pin">D6</span><span class="pin">D7</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>做對綠燈（串220Ω）</td><td><span class="pin">D8</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>蜂鳴器 ＋</td><td><span class="pin">D9</span></td></tr>
+      </table>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g4)">🔌</span>接線步驟</div>
+      <ol class="steps">
+        <li>電源軌：紅 5V→紅排、黑 GND→藍排。</li>
+        <li><b>超音波 4 腳</b>用母對母杜邦線：VCC→<span class="pin">5V</span>、GND→<span class="pin">GND</span>、Trig→<span class="pin">D3</span>、Echo→<span class="pin">D2</span>。</li>
+        <li><b>低/中/高 三顆燈鈕</b>：燈 ＋腳分別接 <span class="pin">D5</span>、<span class="pin">D6</span>、<span class="pin">D7</span>，−腳都接 GND。</li>
+        <li><b>做對綠燈</b>：長腳串 220Ω 接 <span class="pin">D8</span>，短腳 GND。</li>
+        <li><b>蜂鳴器</b>：＋接 <span class="pin">D9</span>，−接 GND。</li>
+      </ol>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g4)">🎮</span>怎麼玩</div>
+      <div class="play"><ul>
+        <li>超音波朝上放桌面。</li><li>哪顆燈鈕亮就把手舉到對應高度（遠＝高、近＝低）。</li>
+        <li>停住約 1 秒→綠燈＋叮咚過關。</li><li>連完成 3 個動作放慶祝音效。</li>
+      </ul></div>
+
+      <details class="code"><summary>📄 老師用：程式碼</summary>
+<pre><span class="cm">// 第四組 大家動一動（超音波量高度）</span>
+<span class="kw">const int</span> TRIG=3,ECHO=2, L=5,M=6,H=7, OK=8, BUZZER=9;
+<span class="kw">int</span> targets[3]={1,2,3};
+<span class="kw">long</span> <span class="fn">readCM</span>(){<span class="fn">digitalWrite</span>(TRIG,LOW);<span class="fn">delayMicroseconds</span>(2);<span class="fn">digitalWrite</span>(TRIG,HIGH);<span class="fn">delayMicroseconds</span>(10);<span class="fn">digitalWrite</span>(TRIG,LOW);
+  <span class="kw">long</span> d=<span class="fn">pulseIn</span>(ECHO,HIGH,30000);<span class="kw">return</span> d?d/58:999;}
+<span class="kw">int</span> <span class="fn">zone</span>(<span class="kw">long</span> c){<span class="kw">if</span>(c>=35)<span class="kw">return</span> 3;<span class="kw">else if</span>(c>=18)<span class="kw">return</span> 2;<span class="kw">else</span> <span class="kw">return</span> 1;}
+<span class="kw">void</span> <span class="fn">setup</span>(){<span class="fn">pinMode</span>(TRIG,OUTPUT);<span class="fn">pinMode</span>(ECHO,INPUT);<span class="fn">pinMode</span>(L,OUTPUT);<span class="fn">pinMode</span>(M,OUTPUT);<span class="fn">pinMode</span>(H,OUTPUT);<span class="fn">pinMode</span>(OK,OUTPUT);<span class="fn">pinMode</span>(BUZZER,OUTPUT);}
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">for</span>(<span class="kw">int</span> t=0;t&lt;3;t++){
+    <span class="kw">int</span> tg=targets[t];
+    <span class="fn">digitalWrite</span>(L,tg==1);<span class="fn">digitalWrite</span>(M,tg==2);<span class="fn">digitalWrite</span>(H,tg==3);<span class="fn">digitalWrite</span>(OK,LOW);
+    <span class="kw">unsigned long</span> hold=0;
+    <span class="kw">while</span>(<span class="kw">true</span>){<span class="kw">int</span> z=<span class="fn">zone</span>(<span class="fn">readCM</span>());
+      <span class="kw">if</span>(z==tg){<span class="kw">if</span>(hold==0)hold=<span class="fn">millis</span>();<span class="kw">if</span>(<span class="fn">millis</span>()-hold>800)<span class="kw">break</span>;}<span class="kw">else</span> hold=0;<span class="fn">delay</span>(80);}
+    <span class="fn">digitalWrite</span>(OK,HIGH);<span class="fn">tone</span>(BUZZER,1047,120);<span class="fn">delay</span>(160);<span class="fn">tone</span>(BUZZER,1319,200);<span class="fn">delay</span>(600);
+  }
+  <span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;4;i++){<span class="fn">digitalWrite</span>(OK,HIGH);<span class="fn">tone</span>(BUZZER,1568,120);<span class="fn">delay</span>(160);<span class="fn">digitalWrite</span>(OK,LOW);<span class="fn">delay</span>(120);}<span class="fn">delay</span>(1000);
+}</pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第五組 ============ -->
+  <section id="g5" class="group g5">
+    <span class="gtab"><span class="gnum">5</span> 夜市保衛戰 · 記憶遊戲</span>
+    <div class="card gcard">
+      <h2>夜市保衛戰 — 記住順序按按鈕 🧠</h2>
+      <div class="members">王品喬 · 邱湘甯 · 周莉娜</div>
+      <div class="play1">🎯 玩法：發光按鈕一顆顆亮給你看，照<b>一樣順序</b>按回來；對了就加一關、越來越長。</div>
+      <div class="note"><b>每顆發光按鈕都用到「開關」和「燈」：</b>開關接 Arduino 偵測有沒有被按；燈的 ＋腳直接接數位腳由程式控制亮滅（亮給玩家看順序），−腳接 GND。</div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g5)">📦</span>材料清單</div>
+      <div class="mat">
+        <label><input type="checkbox">Arduino Uno<span class="q">×1</span></label>
+        <label><input type="checkbox">麵包板<span class="q">×1</span></label>
+        <label><input type="checkbox">發光按鈕（紅/綠/藍）<span class="q">×3</span></label>
+        <label><input type="checkbox">主動式蜂鳴器<span class="q">×1</span></label>
+        <label><input type="checkbox">鱷魚夾線＋杜邦線<span class="q">數條</span></label>
+      </div>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g5)">🗺️</span>接線圖</div>
+      <div class="diagram">
+        <svg viewBox="0 0 760 420" font-family="Noto Sans TC,sans-serif">
+          <use href="#uno" x="210" y="210" width="340" height="210"/>
+          <use href="#btn" x="40" y="20" width="110" height="110" style="color:#E5484D"/><text x="95" y="140" font-size="12" text-anchor="middle">紅 開關D2 / 燈D8</text>
+          <use href="#btn" x="40" y="155" width="110" height="110" style="color:#2FA84F"/><text x="95" y="275" font-size="12" text-anchor="middle">綠 開關D3 / 燈D9</text>
+          <use href="#btn" x="40" y="290" width="110" height="110" style="color:#2D6CDF"/><text x="95" y="410" font-size="12" text-anchor="middle">藍 開關D4 / 燈D10</text>
+          <use href="#buz" x="600" y="180" width="56" height="56"/><text x="628" y="246" font-size="11" text-anchor="middle">蜂鳴器→D7</text>
+          <!-- switch wires (green) to D2 D3 D4 -->
+          <path d="M150 70 C 240 70 280 200 471 215" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M150 205 C 250 205 300 210 455 215" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <path d="M150 340 C 250 340 320 230 438 217" stroke="#2FA84F" stroke-width="3.5" fill="none"/>
+          <!-- led wires to D8 D9 D10 (via driver) -->
+          <path d="M150 100 C 260 120 320 215 372 218" stroke="#2FA84F" stroke-width="3.5" fill="none" opacity=".6"/>
+          <path d="M150 235 C 260 235 320 218 356 218" stroke="#2FA84F" stroke-width="3.5" fill="none" opacity=".6"/>
+          <path d="M150 370 C 270 370 320 222 340 220" stroke="#2FA84F" stroke-width="3.5" fill="none" opacity=".6"/>
+          <path d="M628 205 C 540 230 470 225 455 218" stroke="#EFA50A" stroke-width="4" fill="none"/>
+          <g font-size="10" font-family="Baloo 2,sans-serif"><circle cx="471.5" cy="215" r="7" fill="none" stroke="#2D6CDF" stroke-width="2.5"/><text x="471.5" y="240" text-anchor="middle">開關D2~D4 / 燈D8~D10</text></g>
+        </svg>
+      </div>
+      <table class="map">
+        <tr><th>線</th><th>從</th><th>到</th></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠</td><td>紅/綠/藍 鈕「開關」（另一腳 GND）</td><td><span class="pin">D2</span><span class="pin">D3</span><span class="pin">D4</span></td></tr>
+        <tr><td><span class="sw" style="background:#2FA84F"></span>綠(淡)</td><td>紅/綠/藍 鈕「燈」＋腳（−接GND）</td><td><span class="pin">D8</span><span class="pin">D9</span><span class="pin">D10</span></td></tr>
+        <tr><td><span class="sw" style="background:#EFA50A"></span>黃</td><td>蜂鳴器 ＋</td><td><span class="pin">D7</span></td></tr>
+      </table>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g5)">🔌</span>接線步驟</div>
+      <ol class="steps">
+        <li>電源軌：紅 5V→紅排、黑 GND→藍排。</li>
+        <li><b>紅鈕</b>：開關一腳 GND、一腳 <span class="pin">D2</span>；燈 ＋腳接 <span class="pin">D8</span>、−腳 GND。</li>
+        <li><b>綠鈕</b>：開關 GND／<span class="pin">D3</span>；燈 ＋腳接 <span class="pin">D9</span>、−腳 GND。</li>
+        <li><b>藍鈕</b>：開關 GND／<span class="pin">D4</span>；燈 ＋腳接 <span class="pin">D10</span>、−腳 GND。</li>
+        <li><b>蜂鳴器</b>：＋接 <span class="pin">D7</span>，−接 GND。</li>
+      </ol>
+
+      <div class="sec-h"><span class="ic" style="background:var(--g5)">🎮</span>怎麼玩</div>
+      <div class="play"><ul>
+        <li>先亮一顆鈕，照著按。</li><li>對了變兩顆順序，照順序按回來。</li>
+        <li>每過一關多一顆，越來越長。</li><li>按錯「嗶嗶嗶」重來；過關有開心音效。</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--ink-soft)"><b>打地鼠變化版：</b>同接線改成「隨機亮一顆＝老鼠出現，快拍對應鈕」，限時內拍越多分越高。</p>
+      </div>
+
+      <details class="code"><summary>📄 老師用：程式碼（記憶遊戲版）</summary>
+<pre><span class="cm">// 第五組 夜市保衛戰 記憶遊戲</span>
+<span class="kw">const int</span> BTN[3]={2,3,4};
+<span class="kw">const int</span> LED[3]={8,9,10};   <span class="cm">// 接按鈕燈（＋腳，−接GND）</span>
+<span class="kw">const int</span> BUZZER=7;
+<span class="kw">int</span> seq[30],len=0; <span class="kw">int</span> notes[3]={523,659,784};
+<span class="kw">void</span> <span class="fn">flash</span>(<span class="kw">int</span> i,<span class="kw">int</span> t){<span class="fn">digitalWrite</span>(LED[i],HIGH);<span class="fn">tone</span>(BUZZER,notes[i],t);<span class="fn">delay</span>(t);<span class="fn">digitalWrite</span>(LED[i],LOW);<span class="fn">delay</span>(160);}
+<span class="kw">void</span> <span class="fn">playSeq</span>(){<span class="fn">delay</span>(600);<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;len;i++)<span class="fn">flash</span>(seq[i],400);}
+<span class="kw">void</span> <span class="fn">addStep</span>(){seq[len++]=<span class="fn">random</span>(3);<span class="fn">playSeq</span>();}
+<span class="kw">void</span> <span class="fn">newGame</span>(){len=0;<span class="fn">addStep</span>();}
+<span class="kw">int</span> <span class="fn">waitBtn</span>(){<span class="kw">while</span>(<span class="kw">true</span>){<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;3;i++)<span class="kw">if</span>(<span class="fn">digitalRead</span>(BTN[i])==LOW){<span class="fn">flash</span>(i,200);<span class="kw">while</span>(<span class="fn">digitalRead</span>(BTN[i])==LOW);<span class="kw">return</span> i;}}}
+<span class="kw">void</span> <span class="fn">setup</span>(){<span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;3;i++){<span class="fn">pinMode</span>(BTN[i],INPUT_PULLUP);<span class="fn">pinMode</span>(LED[i],OUTPUT);}
+  <span class="fn">pinMode</span>(BUZZER,OUTPUT);<span class="fn">randomSeed</span>(<span class="fn">analogRead</span>(A0));<span class="fn">delay</span>(500);<span class="fn">newGame</span>();}
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">for</span>(<span class="kw">int</span> i=0;i&lt;len;i++){
+    <span class="kw">if</span>(<span class="fn">waitBtn</span>()!=seq[i]){<span class="kw">for</span>(<span class="kw">int</span> k=0;k&lt;3;k++){<span class="fn">tone</span>(BUZZER,200,250);<span class="fn">delay</span>(300);}<span class="fn">delay</span>(800);<span class="fn">newGame</span>();<span class="kw">return</span>;}
+  }
+  <span class="fn">tone</span>(BUZZER,1047,120);<span class="fn">delay</span>(150);<span class="fn">tone</span>(BUZZER,1319,200);<span class="fn">delay</span>(700);<span class="fn">addStep</span>();
+}</pre>
+      </details>
+    </div>
+  </section>
+
+  <footer>樂齡 Arduino 工作坊 · 接線前先對顏色、先看「帶燈電壓」，插電前先檢查紅黑有沒有相碰 🔋</footer>
+</div>
+</body>
+</html>
